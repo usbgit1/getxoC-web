@@ -14,7 +14,8 @@ export default async function JugadoresPage() {
 
   const parts = (mp.data ?? []) as MatchPlayer[];
   const stats: PlayerStats[] = ((p.data ?? []) as Player[]).map((pl) => {
-    const mine = parts.filter((x) => x.player_id === pl.id);
+    // Ha jugado el partido (PJ) quien tiene minutos.
+    const mine = parts.filter((x) => x.player_id === pl.id && x.minutos > 0);
     return {
       ...pl,
       partidos: mine.length,

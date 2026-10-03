@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 import { registerMatch, type ActionState } from "@/lib/actions";
 import type { Match, Team } from "@/lib/types";
 
@@ -16,7 +16,15 @@ export default function RegisterForm({ teams, matches }: { teams: Team[]; matche
   const maxJornada = Math.max(TOTAL_JORNADAS, ...matches.map((m) => m.jornada));
 
   return (
-    <form action={action} className="bg-white rounded-lg shadow-sm p-4 space-y-4">
+    // Envío con onSubmit para que un error no vacíe el formulario (ver ResultsForm).
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        startTransition(() => action(data));
+      }}
+      className="bg-white rounded-lg shadow-sm p-4 space-y-4"
+    >
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <label className="text-sm">
           Jornada

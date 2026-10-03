@@ -30,7 +30,7 @@ export default async function PartidosPage() {
           const nombre = m.rival || "Por definir";
           return (
             <li key={m.id}>
-              <Link href={`/partidos/${m.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
+              <Link href={m.rival ? `/resultados?jornada=${m.jornada}` : "/registrar"} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
                 <span className="w-8 text-gray-400 text-sm">J{m.jornada}</span>
                 <span className="flex-1 min-w-0">
                   <span className="block font-medium truncate">

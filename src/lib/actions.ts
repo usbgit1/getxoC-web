@@ -28,6 +28,7 @@ export async function deletePlayer(id: string): Promise<void> {
   if (error) throw new Error(`No se pudo borrar el jugador: ${error.message}`);
   revalidatePath("/jugadores");
   revalidatePath("/partidos", "layout");
+  revalidatePath("/resultados");
 }
 
 const EQUIPO = "Getxo C";
@@ -72,6 +73,7 @@ export async function registerMatch(_prev: ActionState, formData: FormData): Pro
   if (error) return { success: false, message: `Error al guardar: ${error.message}` };
 
   revalidatePath("/partidos", "layout");
+  revalidatePath("/resultados");
   return { success: true, message: `Jornada ${jornada} registrada: ${local} vs ${visitante}.` };
 }
 
@@ -80,34 +82,43 @@ const num = (v: FormDataEntryValue | null) => {
   return s === "" ? null : Number(s);
 };
 
-export async function saveMatch(
+// Guarda el resultado y los datos de cada jugador de un partido.
+// Un jugador "juega" (PJ) si tiene minutos; ser titular o marcar exige minutos.
+export async function saveResults(
   matchId: string,
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const jugado = formData.get("jugado") === "on";
   const golesGetxo = num(formData.get("goles_getxo"));
   const golesRival = num(formData.get("goles_rival"));
 
-  if (jugado && (golesGetxo === null || golesRival === null)) {
-    return { success: false, message: "Un partido jugado necesita el resultado de ambos equipos." };
+  if ((golesGetxo === null) !== (golesRival === null)) {
+    return { success: false, message: "Rellena el resultado de los dos equipos, o deja ambos vacíos." };
+  }
+  if ([golesGetxo, golesRival].some((g) => g !== null && (!Number.isInteger(g) || g < 0))) {
+    return { success: false, message: "El resultado debe ser un número entero positivo." };
   }
 
-  const playerIds = formData.getAll("player_id").map(String);
   const participaciones = [];
-  for (const pid of playerIds) {
+  for (const pid of formData.getAll("player_id").map(String)) {
+    const nombre = String(formData.get(`nombre_${pid}`) ?? "Un jugador");
     const titular = formData.get(`titular_${pid}`) === "on";
-    const convocado = formData.get(`convocado_${pid}`) === "on";
     const minutos = num(formData.get(`minutos_${pid}`)) ?? 0;
     const goles = num(formData.get(`goles_${pid}`)) ?? 0;
 
     if (!Number.isInteger(minutos) || minutos < 0 || minutos > 150) {
-      return { success: false, message: "Los minutos deben estar entre 0 y 150." };
+      return { success: false, message: `${nombre}: los minutos deben estar entre 0 y 150.` };
     }
     if (!Number.isInteger(goles) || goles < 0) {
-      return { success: false, message: "Los goles deben ser un número entero positivo." };
+      return { success: false, message: `${nombre}: los goles deben ser un número entero positivo.` };
     }
-    if (convocado || titular || minutos > 0 || goles > 0) {
+    if (minutos === 0 && (titular || goles > 0)) {
+      return {
+        success: false,
+        message: `${nombre}: si es titular o marca, tiene que tener minutos jugados.`,
+      };
+    }
+    if (minutos > 0) {
       participaciones.push({ match_id: matchId, player_id: pid, titular, minutos, goles });
     }
   }
@@ -116,33 +127,37 @@ export async function saveMatch(
   if (golesGetxo !== null && golesJugadores > golesGetxo) {
     return {
       success: false,
-      message: `Los goleadores suman ${golesJugadores}, más que el resultado (${golesGetxo}).`,
+      message: `Los goleadores suman ${golesJugadores}, más que el resultado del Getxo C (${golesGetxo}).`,
     };
   }
 
-  const { error: e1 } = await supabase
+  const { error: errPartido } = await supabase
     .from("matches")
-    .update({
-      fecha: String(formData.get("fecha") ?? "") || null,
-      hora: String(formData.get("hora") ?? "").trim() || null,
-      rival: String(formData.get("rival") ?? "").trim() || null,
-      es_local: formData.get("es_local") === "local",
-      goles_getxo: golesGetxo,
-      goles_rival: golesRival,
-      jugado,
-    })
+    .update({ goles_getxo: golesGetxo, goles_rival: golesRival, jugado: golesGetxo !== null })
     .eq("id", matchId);
-  if (e1) return { success: false, message: `Error al guardar el partido: ${e1.message}` };
-
-  const { error: e2 } = await supabase.from("match_players").delete().eq("match_id", matchId);
-  if (e2) return { success: false, message: `Error al actualizar jugadores: ${e2.message}` };
-
-  if (participaciones.length) {
-    const { error: e3 } = await supabase.from("match_players").insert(participaciones);
-    if (e3) return { success: false, message: `Error al guardar jugadores: ${e3.message}` };
+  if (errPartido) {
+    return { success: false, message: `Error al guardar el resultado: ${errPartido.message}` };
   }
 
-  revalidatePath("/partidos", "layout");
+  // Primero se guardan los jugadores nuevos y después se borran los que sobran,
+  // para no perder datos si algo falla a mitad.
+  if (participaciones.length) {
+    const { error } = await supabase
+      .from("match_players")
+      .upsert(participaciones, { onConflict: "match_id,player_id" });
+    if (error) return { success: false, message: `Error al guardar jugadores: ${error.message}` };
+  }
+  const ids = participaciones.map((p) => p.player_id);
+  const sobrantes = supabase.from("match_players").delete().eq("match_id", matchId);
+  const { error: errBorrado } = await (ids.length
+    ? sobrantes.not("player_id", "in", `(${ids.join(",")})`)
+    : sobrantes);
+  if (errBorrado) {
+    return { success: false, message: `Error al actualizar jugadores: ${errBorrado.message}` };
+  }
+
+  revalidatePath("/partidos");
   revalidatePath("/jugadores");
-  return { success: true, message: "Partido guardado." };
+  revalidatePath("/resultados");
+  return { success: true, message: "Datos del partido guardados." };
 }

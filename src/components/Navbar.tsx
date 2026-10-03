@@ -8,6 +8,7 @@ const links = [
   { href: "/jugadores", label: "Jugadores" },
   { href: "/partidos", label: "Partidos" },
   { href: "/registrar", label: "Registrar" },
+  { href: "/resultados", label: "Resultados" },
 ];
 
 export default function Navbar() {
