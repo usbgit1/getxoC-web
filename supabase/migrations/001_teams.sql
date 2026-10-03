@@ -17,7 +17,7 @@ insert into teams (nombre) values
   ('Sporting de Lutxana'),
   ('Galea A'),
   ('Moraza A'),
-  ('Astrabuduako'),
+  ('Astrabuduako C'),
   ('Gallarta A'),
   ('Ikhoba A'),
   ('La Merced A'),
