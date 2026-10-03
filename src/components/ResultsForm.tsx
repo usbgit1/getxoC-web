@@ -54,7 +54,7 @@ export default function ResultsForm({
           Solo hay que rellenar a quienes han jugado. Con minutos jugados cuenta como partido jugado (PJ).
         </p>
         {players.length === 0 ? (
-          <p className="text-sm text-gray-500">Aún no hay jugadores. Añádelos en la pestaña Jugadores.</p>
+          <p className="text-sm text-gray-500">Aún no hay jugadores. Añádelos en la pestaña Estadística.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
