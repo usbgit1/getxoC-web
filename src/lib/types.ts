@@ -18,6 +18,11 @@ export interface Match {
   jugado: boolean;
 }
 
+export interface Team {
+  id: string;
+  nombre: string;
+}
+
 export interface MatchPlayer {
   match_id: string;
   player_id: string;

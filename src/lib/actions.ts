@@ -30,6 +30,53 @@ export async function deletePlayer(id: string): Promise<void> {
   revalidatePath("/partidos", "layout");
 }
 
+const EQUIPO = "Getxo C";
+
+export async function addTeam(formData: FormData): Promise<void> {
+  const nombre = String(formData.get("nombre") ?? "").trim();
+  if (!nombre) return;
+  const { error } = await supabase.from("teams").upsert({ nombre }, { onConflict: "nombre" });
+  if (error) throw new Error(`No se pudo añadir el equipo: ${error.message}`);
+  revalidatePath("/registrar");
+}
+
+export async function registerMatch(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const jornada = Number(formData.get("jornada"));
+  const local = String(formData.get("local") ?? "");
+  const visitante = String(formData.get("visitante") ?? "");
+  const fecha = String(formData.get("fecha") ?? "");
+  const hora = String(formData.get("hora") ?? "").trim();
+
+  if (!Number.isInteger(jornada) || jornada < 1) {
+    return { success: false, message: "Elige el número de jornada." };
+  }
+  if (!local || !visitante) {
+    return { success: false, message: "Elige el equipo local y el visitante." };
+  }
+  if (local === visitante) {
+    return { success: false, message: "El local y el visitante no pueden ser el mismo equipo." };
+  }
+  if (local !== EQUIPO && visitante !== EQUIPO) {
+    return { success: false, message: `Uno de los dos equipos debe ser ${EQUIPO}.` };
+  }
+
+  const esLocal = local === EQUIPO;
+  // Solo se incluyen fecha y hora si se rellenan, para no borrar las ya guardadas.
+  const row: Record<string, unknown> = {
+    jornada,
+    es_local: esLocal,
+    rival: esLocal ? visitante : local,
+  };
+  if (fecha) row.fecha = fecha;
+  if (hora) row.hora = hora;
+
+  const { error } = await supabase.from("matches").upsert(row, { onConflict: "jornada" });
+  if (error) return { success: false, message: `Error al guardar: ${error.message}` };
+
+  revalidatePath("/partidos", "layout");
+  return { success: true, message: `Jornada ${jornada} registrada: ${local} vs ${visitante}.` };
+}
+
 const num = (v: FormDataEntryValue | null) => {
   const s = String(v ?? "").trim();
   return s === "" ? null : Number(s);

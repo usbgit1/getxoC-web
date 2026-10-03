@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const links = [
   { href: "/jugadores", label: "Jugadores" },
   { href: "/partidos", label: "Partidos" },
+  { href: "/registrar", label: "Registrar" },
 ];
 
 export default function Navbar() {
