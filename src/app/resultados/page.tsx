@@ -45,7 +45,7 @@ export default async function ResultadosPage({
   if (!pedido) redirect(`/resultados?jornada=${match.jornada}`);
 
   const [p, mp] = await Promise.all([
-    supabase.from("players").select("*").eq("activo", true).order("dorsal", { nullsFirst: false }),
+    supabase.from("players").select("*").eq("activo", true),
     supabase.from("match_players").select("*").eq("match_id", match.id),
   ]);
 
@@ -62,7 +62,7 @@ export default async function ResultadosPage({
       <ResultsForm
         key={match.id}
         match={match}
-        players={(p.data ?? []) as Player[]}
+        players={((p.data ?? []) as Player[]).sort((a, b) => a.nombre.localeCompare(b.nombre, "es"))}
         participaciones={(mp.data ?? []) as MatchPlayer[]}
       />
     </div>
