@@ -1,4 +1,5 @@
-import { addPlayer, deletePlayer } from "@/lib/actions";
+import PlayersTable from "@/components/PlayersTable";
+import { addPlayer } from "@/lib/actions";
 import { supabase } from "@/lib/supabase";
 import type { MatchPlayer, Player, PlayerStats } from "@/lib/types";
 
@@ -50,41 +51,7 @@ export default async function JugadoresPage() {
       {stats.length === 0 ? (
         <p className="text-gray-500">Aún no hay jugadores.</p>
       ) : (
-        <div className="bg-white rounded-lg shadow-sm overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-500 border-b">
-                <th className="px-4 py-2">#</th>
-                <th className="px-2">Nombre</th>
-                <th className="px-2 text-right" title="Partidos jugados">PJ</th>
-                <th className="px-2 text-right" title="Titular">Tit.</th>
-                <th className="px-2 text-right">Min.</th>
-                <th className="px-2 text-right">Goles</th>
-                <th className="px-4" />
-              </tr>
-            </thead>
-            <tbody>
-              {stats.map((s) => (
-                <tr key={s.id} className="border-b last:border-0">
-                  <td className="px-4 py-2 text-gray-400">{s.dorsal ?? "–"}</td>
-                  <td className="px-2">
-                    {s.nombre}
-                    {s.posicion && <span className="text-xs text-gray-400 ml-2">{s.posicion}</span>}
-                  </td>
-                  <td className="px-2 text-right">{s.partidos}</td>
-                  <td className="px-2 text-right">{s.titularidades}</td>
-                  <td className="px-2 text-right">{s.minutos}</td>
-                  <td className="px-2 text-right font-semibold">{s.goles}</td>
-                  <td className="px-4 text-right">
-                    <form action={deletePlayer.bind(null, s.id)}>
-                      <button className="text-xs text-red-600 hover:underline">Borrar</button>
-                    </form>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <PlayersTable players={stats} />
       )}
     </div>
   );

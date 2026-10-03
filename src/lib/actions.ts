@@ -45,7 +45,6 @@ export async function registerMatch(_prev: ActionState, formData: FormData): Pro
   const local = String(formData.get("local") ?? "");
   const visitante = String(formData.get("visitante") ?? "");
   const fecha = String(formData.get("fecha") ?? "");
-  const hora = String(formData.get("hora") ?? "").trim();
 
   if (!Number.isInteger(jornada) || jornada < 1) {
     return { success: false, message: "Elige el número de jornada." };
@@ -61,14 +60,13 @@ export async function registerMatch(_prev: ActionState, formData: FormData): Pro
   }
 
   const esLocal = local === EQUIPO;
-  // Solo se incluyen fecha y hora si se rellenan, para no borrar las ya guardadas.
+  // La fecha solo se incluye si se rellena, para no borrar la ya guardada.
   const row: Record<string, unknown> = {
     jornada,
     es_local: esLocal,
     rival: esLocal ? visitante : local,
   };
   if (fecha) row.fecha = fecha;
-  if (hora) row.hora = hora;
 
   const { error } = await supabase.from("matches").upsert(row, { onConflict: "jornada" });
   if (error) return { success: false, message: `Error al guardar: ${error.message}` };
