@@ -26,12 +26,14 @@ export interface Team {
 export interface MatchPlayer {
   match_id: string;
   player_id: string;
+  convocado: boolean;
   titular: boolean;
   minutos: number;
   goles: number;
 }
 
 export interface PlayerStats extends Player {
+  convocatorias: number;
   partidos: number;
   titularidades: number;
   minutos: number;

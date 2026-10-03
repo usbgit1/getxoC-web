@@ -4,12 +4,13 @@ import { useMemo, useState } from "react";
 import { deletePlayer } from "@/lib/actions";
 import type { PlayerStats } from "@/lib/types";
 
-type Key = "dorsal" | "nombre" | "partidos" | "titularidades" | "minutos" | "goles";
+type Key = "dorsal" | "nombre" | "convocatorias" | "partidos" | "titularidades" | "minutos" | "goles";
 type Dir = "asc" | "desc";
 
 const columns: { key: Key; label: string; title: string; align: "left" | "right" }[] = [
   { key: "dorsal", label: "#", title: "Dorsal", align: "left" },
   { key: "nombre", label: "Nombre", title: "Nombre", align: "left" },
+  { key: "convocatorias", label: "Conv.", title: "Convocatorias", align: "right" },
   { key: "partidos", label: "PJ", title: "Partidos jugados", align: "right" },
   { key: "titularidades", label: "Tit.", title: "Titularidades", align: "right" },
   { key: "minutos", label: "Min.", title: "Minutos", align: "right" },
@@ -95,6 +96,7 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
                 {s.nombre}
                 {s.posicion && <span className="hidden sm:inline text-xs text-gray-400 ml-2">{s.posicion}</span>}
               </td>
+              <td className="px-1.5 sm:px-2 text-right">{s.convocatorias}</td>
               <td className="px-1.5 sm:px-2 text-right">{s.partidos}</td>
               <td className="px-1.5 sm:px-2 text-right">{s.titularidades}</td>
               <td className="px-1.5 sm:px-2 text-right">{s.minutos}</td>

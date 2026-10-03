@@ -51,7 +51,7 @@ export default function ResultsForm({
       <section className="bg-white rounded-lg shadow-sm p-4">
         <h2 className="font-semibold mb-1">Jugadores</h2>
         <p className="text-xs text-gray-500 mb-3">
-          Solo hay que rellenar a quienes han jugado. Con minutos jugados cuenta como partido jugado (PJ).
+          Marca Conv. a los convocados. Quien tiene minutos cuenta como partido jugado (PJ) y queda convocado solo.
         </p>
         {players.length === 0 ? (
           <p className="text-sm text-gray-500">Aún no hay jugadores. Añádelos en la pestaña Estadística.</p>
@@ -61,6 +61,7 @@ export default function ResultsForm({
               <thead>
                 <tr className="text-left text-gray-500 border-b">
                   <th className="py-2 pr-2">Jugador</th>
+                  <th className="px-2 text-center">Conv.</th>
                   <th className="px-2 text-center">Titular</th>
                   <th className="px-2">Minutos</th>
                   <th className="px-2">Goles</th>
@@ -80,6 +81,14 @@ export default function ResultsForm({
                       <td className="px-2 text-center">
                         <input
                           type="checkbox"
+                          name={`convocado_${p.id}`}
+                          defaultChecked={!!mp?.convocado || (mp?.minutos ?? 0) > 0}
+                          className="h-4 w-4"
+                        />
+                      </td>
+                      <td className="px-2 text-center">
+                        <input
+                          type="checkbox"
                           name={`titular_${p.id}`}
                           defaultChecked={mp?.titular ?? false}
                           className="h-4 w-4"
@@ -93,6 +102,15 @@ export default function ResultsForm({
                           max={150}
                           name={`minutos_${p.id}`}
                           defaultValue={mp?.minutos ?? ""}
+                          onChange={(e) => {
+                            // Quien juega está convocado: se marca solo la casilla.
+                            if (Number(e.target.value) > 0) {
+                              const conv = e.target.closest("tr")?.querySelector<HTMLInputElement>(
+                                `input[name="convocado_${p.id}"]`
+                              );
+                              if (conv) conv.checked = true;
+                            }
+                          }}
                           className={input}
                         />
                       </td>

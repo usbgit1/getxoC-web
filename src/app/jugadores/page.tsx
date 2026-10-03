@@ -14,10 +14,12 @@ export default async function JugadoresPage() {
 
   const parts = (mp.data ?? []) as MatchPlayer[];
   const stats: PlayerStats[] = ((p.data ?? []) as Player[]).map((pl) => {
-    // Ha jugado el partido (PJ) quien tiene minutos.
-    const mine = parts.filter((x) => x.player_id === pl.id && x.minutos > 0);
+    const all = parts.filter((x) => x.player_id === pl.id);
+    // Ha jugado el partido (PJ) quien tiene minutos; quien juega siempre cuenta como convocado.
+    const mine = all.filter((x) => x.minutos > 0);
     return {
       ...pl,
+      convocatorias: all.filter((x) => x.convocado || x.minutos > 0).length,
       partidos: mine.length,
       titularidades: mine.filter((x) => x.titular).length,
       minutos: mine.reduce((s, x) => s + x.minutos, 0),

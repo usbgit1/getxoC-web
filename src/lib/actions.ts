@@ -103,6 +103,7 @@ export async function saveResults(
   for (const pid of formData.getAll("player_id").map(String)) {
     const nombre = String(formData.get(`nombre_${pid}`) ?? "Un jugador");
     const titular = formData.get(`titular_${pid}`) === "on";
+    const marcadoConvocado = formData.get(`convocado_${pid}`) === "on";
     const minutos = num(formData.get(`minutos_${pid}`)) ?? 0;
     const goles = num(formData.get(`goles_${pid}`)) ?? 0;
 
@@ -118,8 +119,10 @@ export async function saveResults(
         message: `${nombre}: si es titular o marca, tiene que tener minutos jugados.`,
       };
     }
-    if (minutos > 0) {
-      participaciones.push({ match_id: matchId, player_id: pid, titular, minutos, goles });
+    // Quien juega está convocado aunque no se haya marcado la casilla.
+    const convocado = marcadoConvocado || minutos > 0;
+    if (convocado) {
+      participaciones.push({ match_id: matchId, player_id: pid, convocado, titular, minutos, goles });
     }
   }
 
