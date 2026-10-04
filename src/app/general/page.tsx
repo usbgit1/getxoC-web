@@ -73,27 +73,35 @@ export default async function GeneralPage() {
   const favor = jugados.reduce((s, x) => s + x.goles_getxo!, 0);
   const contra = jugados.reduce((s, x) => s + x.goles_rival!, 0);
 
+  const media = (n: number) => (jugados.length ? (n / jugados.length).toFixed(2) : "–");
+
   const resumen = [
     { label: "Jugados", valor: jugados.length },
     { label: "Ganados", valor: g },
     { label: "Empatados", valor: e },
     { label: "Perdidos", valor: per },
+  ];
+  const goles = [
     { label: "Goles a favor", valor: favor },
     { label: "Goles en contra", valor: contra },
+    { label: "Media a favor / partido", valor: media(favor) },
+    { label: "Media en contra / partido", valor: media(contra) },
   ];
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">General</h1>
 
-      <section className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-        {resumen.map((r) => (
-          <div key={r.label} className="bg-white rounded-lg shadow-sm p-3 text-center">
-            <div className="text-2xl font-bold text-emerald-900">{r.valor}</div>
-            <div className="text-xs text-gray-500">{r.label}</div>
-          </div>
-        ))}
-      </section>
+      {[resumen, goles].map((grupo, i) => (
+        <section key={i} className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {grupo.map((r) => (
+            <div key={r.label} className="bg-white rounded-lg shadow-sm p-3 text-center">
+              <div className="text-2xl font-bold text-emerald-900">{r.valor}</div>
+              <div className="text-xs text-gray-500">{r.label}</div>
+            </div>
+          ))}
+        </section>
+      ))}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Top titulo="Top 5 · Más minutos" unidad="min" filas={top("minutos")} />
