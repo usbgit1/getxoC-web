@@ -4,11 +4,10 @@ import { Fragment, useMemo, useState } from "react";
 import { deletePlayer } from "@/lib/actions";
 import type { PlayerStats } from "@/lib/types";
 
-type Key = "dorsal" | "nombre" | "convocatorias" | "partidos" | "titularidades" | "minutos" | "goles";
+type Key = "nombre" | "convocatorias" | "partidos" | "titularidades" | "minutos" | "goles";
 type Dir = "asc" | "desc";
 
 const columns: { key: Key; label: string; title: string; align: "left" | "right" }[] = [
-  { key: "dorsal", label: "#", title: "Dorsal", align: "left" },
   { key: "nombre", label: "Nombre", title: "Nombre", align: "left" },
   { key: "convocatorias", label: "Conv.", title: "Convocatorias", align: "right" },
   { key: "partidos", label: "PJ", title: "Partidos jugados", align: "right" },
@@ -18,20 +17,13 @@ const columns: { key: Key; label: string; title: string; align: "left" | "right"
 ];
 
 export default function PlayersTable({ players }: { players: PlayerStats[] }) {
-  const [key, setKey] = useState<Key>("dorsal");
+  const [key, setKey] = useState<Key>("nombre");
   const [dir, setDir] = useState<Dir>("asc");
 
   const sorted = useMemo(() => {
     const factor = dir === "asc" ? 1 : -1;
     return [...players].sort((a, b) => {
       if (key === "nombre") return factor * a.nombre.localeCompare(b.nombre, "es");
-      if (key === "dorsal") {
-        // Sin dorsal siempre al final, en cualquier sentido.
-        if (a.dorsal === null && b.dorsal === null) return a.nombre.localeCompare(b.nombre, "es");
-        if (a.dorsal === null) return 1;
-        if (b.dorsal === null) return -1;
-        return factor * (a.dorsal - b.dorsal);
-      }
       return factor * (a[key] - b[key]) || a.nombre.localeCompare(b.nombre, "es");
     });
   }, [players, key, dir]);
@@ -100,8 +92,7 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
         <tbody>
           {sorted.map((s) => (
             <tr key={s.id} className="border-b last:border-0">
-              <td className="pl-3 px-1.5 sm:px-2 py-2 text-gray-400">{s.dorsal ?? "–"}</td>
-              <td className="px-1.5 sm:px-2">
+              <td className="pl-3 px-1.5 sm:px-2 py-2">
                 {s.nombre}
                 {s.posicion && <span className="hidden sm:inline text-xs text-gray-400 ml-2">{s.posicion}</span>}
               </td>
