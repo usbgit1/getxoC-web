@@ -103,6 +103,34 @@ export default async function GeneralPage() {
         </section>
       ))}
 
+      <section className="bg-white rounded-lg shadow-sm p-4">
+        <h2 className="font-semibold mb-3">Resultados</h2>
+        {jugados.length === 0 ? (
+          <p className="text-sm text-gray-500">Aún no hay resultados.</p>
+        ) : (
+          <>
+            <div className="flex flex-wrap gap-1">
+              {[...jugados]
+                .sort((a, b) => a.jornada - b.jornada)
+                .map((x) => {
+                  const dif = x.goles_getxo! - x.goles_rival!;
+                  const estado = dif > 0 ? "victoria" : dif < 0 ? "derrota" : "empate";
+                  return (
+                    <span
+                      key={x.id}
+                      title={`J${x.jornada} vs ${x.rival ?? "?"}: ${x.goles_getxo}-${x.goles_rival} (${estado})`}
+                      className={`w-6 h-6 rounded-sm ${dif > 0 ? "bg-green-600" : dif < 0 ? "bg-red-600" : "bg-gray-400"}`}
+                    />
+                  );
+                })}
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              De más antiguo a más reciente · verde: victoria · gris: empate · rojo: derrota
+            </p>
+          </>
+        )}
+      </section>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <Top titulo="Top 5 · Más minutos" unidad="min" filas={top("minutos")} />
         <Top titulo="Top 5 · Más titularidades" unidad="tit." filas={top("titularidades")} />
