@@ -54,7 +54,7 @@ export default function ResultsForm({
           Marca Conv. a los convocados. Quien tiene minutos cuenta como partido jugado (PJ) y queda convocado solo.
         </p>
         {players.length === 0 ? (
-          <p className="text-sm text-gray-500">Aún no hay jugadores. Añádelos en la pestaña Estadística.</p>
+          <p className="text-sm text-gray-500">Aún no hay jugadores. Añádelos en la pestaña Jugadores.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">

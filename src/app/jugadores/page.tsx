@@ -42,7 +42,7 @@ export default async function JugadoresPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Estadística</h1>
+      <h1 className="text-2xl font-bold">Jugadores</h1>
 
       <form action={addPlayer} className="bg-white rounded-lg shadow-sm p-4 flex flex-wrap gap-2 items-end">
         <label className="text-sm">
