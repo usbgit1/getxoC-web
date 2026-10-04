@@ -7,9 +7,9 @@ import { usePathname } from "next/navigation";
 const links = [
   { href: "/general", label: "General" },
   { href: "/jugadores", label: "Jugadores" },
+  { href: "/resultados", label: "Resultados" },
   { href: "/partidos", label: "Partidos" },
   { href: "/registrar", label: "Registrar" },
-  { href: "/resultados", label: "Resultados" },
 ];
 
 export default function Navbar() {
