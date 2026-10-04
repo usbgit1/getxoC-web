@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { deletePlayer } from "@/lib/actions";
 import type { PlayerStats } from "@/lib/types";
 
@@ -43,7 +43,8 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
           {/* Fila de controles: ordenar cada columna */}
           <tr>
             {columns.map((c, i) => (
-              <th key={c.key} className={`${i === 0 ? "pl-3" : ""} px-1.5 sm:px-2 pt-3 pb-1 font-normal`}>
+              <Fragment key={c.key}>
+              <th className={`${i === 0 ? "pl-3" : ""} px-1.5 sm:px-2 pt-3 pb-1 font-normal`}>
                 <div className={`flex gap-0.5 ${c.align === "right" ? "justify-end" : "justify-start"}`}>
                   {(["asc", "desc"] as const).map((d) => {
                     const activo = key === c.key && dir === d;
@@ -69,13 +70,15 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
                   })}
                 </div>
               </th>
+              {c.key === "nombre" && <th />}
+              </Fragment>
             ))}
             <th />
           </tr>
           <tr className="text-left text-gray-500 border-b">
             {columns.map((c, i) => (
+              <Fragment key={c.key}>
               <th
-                key={c.key}
                 title={c.title}
                 aria-sort={key === c.key ? (dir === "asc" ? "ascending" : "descending") : "none"}
                 className={`${i === 0 ? "pl-3" : ""} px-1.5 sm:px-2 py-2 ${c.align === "right" ? "text-right" : ""} ${
@@ -84,6 +87,12 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
               >
                 {c.label}
               </th>
+              {c.key === "nombre" && (
+                <th className="px-1.5 sm:px-2 py-2 font-medium" title="Titular en los últimos 5 partidos jugados (antiguo → reciente)">
+                  Últ. 5
+                </th>
+              )}
+              </Fragment>
             ))}
             <th className="px-2 sm:px-4" />
           </tr>
@@ -95,6 +104,21 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
               <td className="px-1.5 sm:px-2">
                 {s.nombre}
                 {s.posicion && <span className="hidden sm:inline text-xs text-gray-400 ml-2">{s.posicion}</span>}
+              </td>
+              <td className="px-1.5 sm:px-2">
+                <div className="flex gap-0.5">
+                  {s.racha.map((r) => (
+                    <span
+                      key={r.jornada}
+                      title={`J${r.jornada}: ${r.titular ? "titular" : "no titular"}`}
+                      className={`w-5 h-5 rounded-sm text-[10px] font-bold text-white flex items-center justify-center ${
+                        r.titular ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    >
+                      T
+                    </span>
+                  ))}
+                </div>
               </td>
               <td className="px-1.5 sm:px-2 text-right">{s.convocatorias}</td>
               <td className="px-1.5 sm:px-2 text-right">{s.partidos}</td>

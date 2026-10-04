@@ -38,4 +38,6 @@ export interface PlayerStats extends Player {
   titularidades: number;
   minutos: number;
   goles: number;
+  // Últimos partidos jugados, del más antiguo al más reciente (titular o no).
+  racha: { jornada: number; titular: boolean }[];
 }
