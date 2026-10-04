@@ -115,7 +115,7 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
                         r.titular ? "bg-green-600" : "bg-red-600"
                       }`}
                     >
-                      T
+                      {r.titular ? "T" : ""}
                     </span>
                   ))}
                 </div>
