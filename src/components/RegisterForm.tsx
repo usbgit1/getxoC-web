@@ -55,10 +55,6 @@ export default function RegisterForm({ teams, matches }: { teams: Team[]; matche
             {teams.map((t) => <option key={t.id} value={t.nombre}>{t.nombre}</option>)}
           </select>
         </label>
-        <label className="text-sm">
-          Fecha (opcional)
-          <input type="date" name="fecha" className={field} />
-        </label>
       </div>
       <p className="text-xs text-gray-500">
         Si eliges una jornada ya registrada, se actualiza su rival y su campo sin perder el resultado.
