@@ -109,22 +109,36 @@ export default async function GeneralPage() {
           <p className="text-sm text-gray-500">Aún no hay resultados.</p>
         ) : (
           <>
-            <div className="flex flex-wrap gap-1">
-              {[...jugados]
-                .sort((a, b) => a.jornada - b.jornada)
-                .map((x) => {
-                  const dif = x.goles_getxo! - x.goles_rival!;
-                  const estado = dif > 0 ? "victoria" : dif < 0 ? "derrota" : "empate";
-                  return (
-                    <span
-                      key={x.id}
-                      title={`J${x.jornada} vs ${x.rival ?? "?"}: ${x.goles_getxo}-${x.goles_rival} (${estado})`}
-                      className={`w-6 h-6 rounded-sm ${dif > 0 ? "bg-green-600" : dif < 0 ? "bg-red-600" : "bg-gray-400"}`}
-                    />
-                  );
-                })}
-            </div>
-            <p className="text-xs text-gray-500 mt-2">
+            {(() => {
+              const orden = [...jugados].sort((a, b) => a.jornada - b.jornada);
+              const cuadrado = (x: Match, tam: string) => {
+                const dif = x.goles_getxo! - x.goles_rival!;
+                const estado = dif > 0 ? "victoria" : dif < 0 ? "derrota" : "empate";
+                return (
+                  <span
+                    key={x.id}
+                    title={`J${x.jornada} vs ${x.rival ?? "?"}: ${x.goles_getxo}-${x.goles_rival} (${estado})`}
+                    className={`${tam} rounded-sm ${dif > 0 ? "bg-green-600" : dif < 0 ? "bg-red-600" : "bg-gray-400"}`}
+                  />
+                );
+              };
+              const resto = orden.slice(0, -5);
+              return (
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1.5">Últimos 5 partidos</p>
+                    <div className="flex flex-wrap gap-1.5">{orden.slice(-5).map((x) => cuadrado(x, "w-9 h-9"))}</div>
+                  </div>
+                  {resto.length > 0 && (
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1.5">Resto de la temporada</p>
+                      <div className="flex flex-wrap gap-1">{resto.map((x) => cuadrado(x, "w-5 h-5"))}</div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+            <p className="text-xs text-gray-500 mt-3">
               De más antiguo a más reciente · verde: victoria · gris: empate · rojo: derrota
             </p>
           </>
