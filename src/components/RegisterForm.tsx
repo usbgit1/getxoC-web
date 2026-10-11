@@ -25,6 +25,7 @@ export default function RegisterForm({ teams, matches }: { teams: Team[]; matche
       }}
       className="bg-white rounded-lg shadow-sm p-4 space-y-4"
     >
+      <h2 className="font-semibold">Registrar partido</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <label className="text-sm">
           Jornada

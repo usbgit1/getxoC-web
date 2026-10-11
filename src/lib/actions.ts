@@ -33,14 +33,6 @@ export async function deletePlayer(id: string): Promise<void> {
 
 const EQUIPO = "Getxo C";
 
-export async function addTeam(formData: FormData): Promise<void> {
-  const nombre = String(formData.get("nombre") ?? "").trim();
-  if (!nombre) return;
-  const { error } = await supabase.from("teams").upsert({ nombre }, { onConflict: "nombre" });
-  if (error) throw new Error(`No se pudo añadir el equipo: ${error.message}`);
-  revalidatePath("/registrar");
-}
-
 export async function registerMatch(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const jornada = Number(formData.get("jornada"));
   const local = String(formData.get("local") ?? "");
