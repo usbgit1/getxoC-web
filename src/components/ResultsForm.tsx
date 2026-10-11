@@ -35,7 +35,8 @@ export default function ResultsForm({
     >
       <section className="bg-white rounded-lg shadow-sm p-4">
         <h2 className="font-semibold mb-3">Resultado</h2>
-        <div className="flex items-end gap-3">
+        {/* Mismo orden que el partido registrado: primero el local, después el visitante. */}
+        <div className={`flex items-end gap-3 ${match.es_local ? "" : "flex-row-reverse justify-end"}`}>
           <label className="text-sm w-28">
             Getxo C
             <input type="number" min={0} name="goles_getxo" defaultValue={match.goles_getxo ?? ""} className={input} />

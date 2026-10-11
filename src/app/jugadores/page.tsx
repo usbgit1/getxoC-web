@@ -31,10 +31,13 @@ export default async function JugadoresPage() {
       titularidades: mine.filter((x) => x.titular).length,
       minutos: mine.reduce((s, x) => s + x.minutos, 0),
       goles: mine.reduce((s, x) => s + x.goles, 0),
-      racha: ultimos.map((u) => ({
-        jornada: u.jornada,
-        titular: mine.some((x) => x.match_id === u.id && x.titular),
-      })),
+      racha: ultimos.map((u) => {
+        const fila = mine.find((x) => x.match_id === u.id);
+        return {
+          jornada: u.jornada,
+          estado: !fila ? ("no" as const) : fila.titular ? ("titular" as const) : ("suplente" as const),
+        };
+      }),
     };
   });
 

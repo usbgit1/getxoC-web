@@ -101,12 +101,14 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
                   {s.racha.map((r) => (
                     <span
                       key={r.jornada}
-                      title={`J${r.jornada}: ${r.titular ? "titular" : "no titular"}`}
+                      title={`J${r.jornada}: ${
+                        r.estado === "titular" ? "titular" : r.estado === "suplente" ? "jugó sin ser titular" : "no jugó"
+                      }`}
                       className={`w-5 h-5 rounded-sm text-[10px] font-bold text-white flex items-center justify-center ${
-                        r.titular ? "bg-green-600" : "bg-red-600"
+                        r.estado === "titular" ? "bg-green-600" : r.estado === "suplente" ? "bg-yellow-400" : "bg-red-600"
                       }`}
                     >
-                      {r.titular ? "T" : ""}
+                      {r.estado === "titular" ? "T" : ""}
                     </span>
                   ))}
                 </div>
