@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/general", label: "General" },
+  { href: "/general2", label: "General2" },
   { href: "/jugadores", label: "Jugadores" },
   { href: "/resultados", label: "Resultados" },
   { href: "/partidos", label: "Partidos" },
@@ -23,14 +24,14 @@ export default function Navbar() {
           {/* En móvil solo el escudo, para que quepan las cuatro pestañas */}
           <span className="hidden sm:inline">Getxo C</span>
         </span>
-        <nav className="flex gap-0.5 sm:gap-1">
+        <nav className="flex gap-0.5 sm:gap-1 min-w-0 overflow-x-auto [scrollbar-width:none]">
           {links.map((l) => {
-            const active = pathname.startsWith(l.href);
+            const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
             return (
               <Link
                 key={l.href}
                 href={l.href}
-                className={`px-2 sm:px-3 py-2 rounded-md text-[13px] sm:text-sm font-medium ${
+                className={`px-1.5 sm:px-3 py-2 rounded-md whitespace-nowrap text-[13px] sm:text-sm font-medium ${
                   active ? "bg-white text-emerald-900" : "text-white/80 hover:bg-emerald-800"
                 }`}
               >
