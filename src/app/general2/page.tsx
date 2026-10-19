@@ -108,6 +108,7 @@ export default async function General2Page() {
       .map((s) => ({ nombre: s.nombre, valor: s[campo] }));
 
   const maxGoles = Math.max(4, ...jugados.flatMap((x) => [x.goles_getxo!, x.goles_rival!]));
+  // 72 px de barra más 18 px para el número que va junto a ella.
   const unidad = 72 / maxGoles;
 
   return (
@@ -126,7 +127,6 @@ export default async function General2Page() {
             </div>
             <div className="flex flex-wrap gap-x-7 gap-y-3 pb-1">
               {[
-                { v: n ? (puntos / n).toFixed(2).replace(".", ",") : "–", l: "puntos / partido" },
                 { v: n ? `${Math.round(pct(g))}%` : "–", l: "victorias" },
                 { v: n ? `${dif > 0 ? "+" : ""}${dif}` : "–", l: "dif. de goles" },
               ].map((d) => (
@@ -223,7 +223,7 @@ export default async function General2Page() {
       <section className="bg-white rounded-xl shadow-sm p-5 sm:p-6">
         <h2 className={etiqueta}>Goles por jornada</h2>
         <div className="flex gap-4 text-sm text-gray-500 mt-1">
-          <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm bg-gray-900" />A favor</span>
+          <span className="flex items-center gap-1.5"><span className={`w-3 h-3 rounded-sm ${VERDE}`} />A favor</span>
           <span className="flex items-center gap-1.5"><span className={`w-3 h-3 rounded-sm ${ROJO}`} />En contra</span>
         </div>
         {n === 0 ? (
@@ -236,18 +236,20 @@ export default async function General2Page() {
                 title={`J${x.jornada}: ${x.goles_getxo} a favor, ${x.goles_rival} en contra`}
                 className="flex-1 min-w-0 flex flex-col items-center"
               >
-                <div className="w-full h-[72px] flex flex-col justify-end items-center">
+                <div className="w-full h-[90px] flex flex-col justify-end items-center">
+                  <span className="text-xs font-semibold leading-[18px]">{x.goles_getxo}</span>
                   <div
-                    className="w-full max-w-[22px] bg-gray-900 rounded-t-sm"
+                    className={`w-full max-w-[22px] rounded-t-sm ${VERDE}`}
                     style={{ height: x.goles_getxo! * unidad }}
                   />
                 </div>
                 <div className="w-full h-px bg-gray-300" />
-                <div className="w-full h-[72px] flex flex-col justify-start items-center">
+                <div className="w-full h-[90px] flex flex-col justify-start items-center">
                   <div
                     className={`w-full max-w-[22px] rounded-b-sm ${ROJO}`}
                     style={{ height: x.goles_rival! * unidad }}
                   />
+                  <span className="text-xs font-semibold leading-[18px]">{x.goles_rival}</span>
                 </div>
                 <span className="text-[11px] text-gray-500 mt-1">{x.jornada}</span>
               </div>

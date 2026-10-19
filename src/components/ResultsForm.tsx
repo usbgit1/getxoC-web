@@ -143,7 +143,11 @@ export default function ResultsForm({
           {pending ? "Guardando…" : "Guardar datos del partido"}
         </button>
         {state.message && (
-          <span className={`text-sm ${state.success ? "text-emerald-700" : "text-red-600"}`}>
+          <span
+            className={`text-sm ${
+              state.warning ? "text-amber-700 font-medium" : state.success ? "text-emerald-700" : "text-red-600"
+            }`}
+          >
             {state.message}
           </span>
         )}

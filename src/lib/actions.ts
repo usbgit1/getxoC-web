@@ -6,7 +6,12 @@ import { supabase } from "@/lib/supabase";
 export interface ActionState {
   success: boolean;
   message: string;
+  // Guardado correcto, pero con un aviso que conviene revisar.
+  warning?: boolean;
 }
+
+// Minutos que debe sumar un partido: 11 jugadores × 90.
+const MINUTOS_PARTIDO = 990;
 
 export async function addPlayer(formData: FormData): Promise<void> {
   const nombre = String(formData.get("nombre") ?? "").trim();
@@ -151,5 +156,15 @@ export async function saveResults(
   revalidatePath("/partidos");
   revalidatePath("/jugadores");
   revalidatePath("/resultados");
+
+  // Sin minutos ni resultado (solo convocatoria) todavía no hay nada que comprobar.
+  const totalMinutos = participaciones.reduce((s, p) => s + p.minutos, 0);
+  if (totalMinutos !== MINUTOS_PARTIDO && (totalMinutos > 0 || golesGetxo !== null)) {
+    return {
+      success: true,
+      warning: true,
+      message: `Datos guardados, pero los minutos de los jugadores suman ${totalMinutos} y deberían sumar ${MINUTOS_PARTIDO}.`,
+    };
+  }
   return { success: true, message: "Datos del partido guardados." };
 }
