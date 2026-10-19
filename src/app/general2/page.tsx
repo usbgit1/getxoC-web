@@ -1,4 +1,5 @@
 import Link from "next/link";
+import VersionFooter from "@/components/VersionFooter";
 import { supabase } from "@/lib/supabase";
 import type { Match, MatchPlayer, Player } from "@/lib/types";
 
@@ -264,6 +265,7 @@ export default async function General2Page() {
         <Top titulo="Más goles" unidad="goles" filas={top("goles")} />
         <Top titulo="Más partidos jugados" unidad="PJ" filas={top("partidos")} />
       </div>
+      <VersionFooter />
     </div>
   );
 }

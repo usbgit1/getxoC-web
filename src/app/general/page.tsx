@@ -1,3 +1,4 @@
+import VersionFooter from "@/components/VersionFooter";
 import { supabase } from "@/lib/supabase";
 import type { Match, MatchPlayer, Player } from "@/lib/types";
 
@@ -151,6 +152,7 @@ export default async function GeneralPage() {
         <Top titulo="Top 5 · Más goles" unidad="goles" filas={top("goles")} />
         <Top titulo="Top 5 · Más partidos jugados" unidad="PJ" filas={top("partidos")} />
       </div>
+      <VersionFooter />
     </div>
   );
 }
