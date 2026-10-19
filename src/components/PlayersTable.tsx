@@ -16,6 +16,13 @@ const columns: { key: Key; label: string; title: string; align: "left" | "right"
   { key: "goles", label: "Goles", title: "Goles", align: "right" },
 ];
 
+const rachaInfo = {
+  titular: { fondo: "bg-green-600", texto: "titular" },
+  suplente: { fondo: "bg-yellow-400", texto: "jugó sin ser titular" },
+  convocado: { fondo: "bg-red-600", texto: "convocado, sin minutos" },
+  no_convocado: { fondo: "bg-black", texto: "no convocado" },
+} as const;
+
 export default function PlayersTable({ players }: { players: PlayerStats[] }) {
   const [key, setKey] = useState<Key>("nombre");
   const [dir, setDir] = useState<Dir>("asc");
@@ -80,7 +87,7 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
                 {c.label}
               </th>
               {c.key === "nombre" && (
-                <th className="px-1.5 sm:px-2 py-2 font-medium" title="Titular en los últimos 5 partidos jugados (antiguo → reciente)">
+                <th className="px-1.5 sm:px-2 py-2 font-medium" title="Últimos 5 partidos (antiguo → reciente): verde T titular, amarillo suplente, rojo sin minutos, negro no convocado">
                   Últ. 5
                 </th>
               )}
@@ -101,11 +108,9 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
                   {s.racha.map((r) => (
                     <span
                       key={r.jornada}
-                      title={`J${r.jornada}: ${
-                        r.estado === "titular" ? "titular" : r.estado === "suplente" ? "jugó sin ser titular" : "no jugó"
-                      }`}
+                      title={`J${r.jornada}: ${rachaInfo[r.estado].texto}`}
                       className={`w-5 h-5 rounded-sm text-[10px] font-bold text-white flex items-center justify-center ${
-                        r.estado === "titular" ? "bg-green-600" : r.estado === "suplente" ? "bg-yellow-400" : "bg-red-600"
+                        rachaInfo[r.estado].fondo
                       }`}
                     >
                       {r.estado === "titular" ? "T" : ""}

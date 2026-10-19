@@ -39,6 +39,6 @@ export interface PlayerStats extends Player {
   minutos: number;
   goles: number;
   // Últimos partidos con datos, del más antiguo al más reciente:
-  // titular, suplente (jugó sin ser titular) o no (sin minutos).
-  racha: { jornada: number; estado: "titular" | "suplente" | "no" }[];
+  // titular, suplente (jugó sin ser titular), convocado (sin minutos) o no_convocado.
+  racha: { jornada: number; estado: "titular" | "suplente" | "convocado" | "no_convocado" }[];
 }

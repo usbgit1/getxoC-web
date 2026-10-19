@@ -31,11 +31,17 @@ export default async function JugadoresPage() {
       minutos: mine.reduce((s, x) => s + x.minutos, 0),
       goles: mine.reduce((s, x) => s + x.goles, 0),
       racha: ultimos.map((u) => {
-        const fila = mine.find((x) => x.match_id === u.id);
-        return {
-          jornada: u.jornada,
-          estado: !fila ? ("no" as const) : fila.titular ? ("titular" as const) : ("suplente" as const),
-        };
+        const fila = all.find((x) => x.match_id === u.id);
+        const estado = !fila
+          ? ("no_convocado" as const)
+          : fila.minutos === 0
+            ? fila.convocado
+              ? ("convocado" as const)
+              : ("no_convocado" as const)
+            : fila.titular
+              ? ("titular" as const)
+              : ("suplente" as const);
+        return { jornada: u.jornada, estado };
       }),
     };
   });
