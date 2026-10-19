@@ -26,8 +26,7 @@ function Top({ titulo, unidad, filas }: { titulo: string; unidad: string; filas:
       ) : (
         <>
           <div className="mt-3 rounded-lg bg-emerald-50 p-3">
-            <p className="text-xs font-semibold text-emerald-900">Líder</p>
-            <p className="flex items-baseline justify-between gap-2 mt-0.5">
+            <p className="flex items-baseline justify-between gap-2">
               <span className="text-xl font-bold truncate">{lider.nombre}</span>
               <span className="text-xl font-bold shrink-0">
                 {lider.valor} <span className="text-xs font-semibold text-gray-500">{unidad}</span>
@@ -235,7 +234,7 @@ export default async function PortadaPage() {
               <div
                 key={x.id}
                 title={`J${x.jornada}: ${x.goles_getxo} a favor, ${x.goles_rival} en contra`}
-                className="flex-1 min-w-0 flex flex-col items-center"
+                className="flex-[0_1_36px] min-w-0 flex flex-col items-center"
               >
                 <div className="w-full h-[90px] flex flex-col justify-end items-center">
                   <span className="text-xs font-semibold leading-[18px]">{x.goles_getxo}</span>

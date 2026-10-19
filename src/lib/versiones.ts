@@ -8,6 +8,14 @@ export interface Version {
 
 export const versiones: Version[] = [
   {
+    version: "v0.102",
+    fecha: "2026-10-19",
+    cambios: [
+      "Portada: se quita la palabra «Líder» de los tops.",
+      "Portada: las barras de goles por jornada se alinean a la izquierda y ya no ocupan todo el ancho.",
+    ],
+  },
+  {
     version: "v0.101",
     fecha: "2026-10-19",
     cambios: [
