@@ -6,8 +6,8 @@ export default function VersionesPage() {
     <div className="space-y-4">
       <div className="flex items-baseline justify-between gap-3">
         <h1 className="text-2xl font-bold">Versiones</h1>
-        <Link href="/general" className="text-sm text-emerald-800 hover:underline">
-          Volver a General
+        <Link href="/portada" className="text-sm text-emerald-800 hover:underline">
+          Volver a Portada
         </Link>
       </div>
       <ol className="space-y-3">

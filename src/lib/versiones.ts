@@ -8,6 +8,14 @@ export interface Version {
 
 export const versiones: Version[] = [
   {
+    version: "v0.101",
+    fecha: "2026-10-19",
+    cambios: [
+      "Se elimina la pestaña General y General2 pasa a llamarse Portada (es la primera pestaña y la de inicio).",
+      "Las direcciones antiguas /general y /general2 redirigen a Portada.",
+    ],
+  },
+  {
     version: "v0.100",
     fecha: "2026-10-19",
     cambios: [

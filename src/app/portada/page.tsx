@@ -59,7 +59,7 @@ function Top({ titulo, unidad, filas }: { titulo: string; unidad: string; filas:
   );
 }
 
-export default async function General2Page() {
+export default async function PortadaPage() {
   const [p, mp, m] = await Promise.all([
     supabase.from("players").select("*"),
     supabase.from("match_players").select("*"),
@@ -114,7 +114,7 @@ export default async function General2Page() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl font-bold">General</h1>
+      <h1 className="text-2xl font-bold">Portada</h1>
 
       <div className="flex flex-wrap gap-5">
         <section className="flex-[2_1_420px] min-w-0 bg-white rounded-xl shadow-sm p-5 sm:p-6">
