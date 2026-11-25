@@ -86,8 +86,8 @@ export default async function PortadaPage() {
 
   const marcador = (x: Match) =>
     x.es_local ? `${x.goles_getxo}-${x.goles_rival}` : `${x.goles_rival}-${x.goles_getxo}`;
-  const ultimos = jugados.slice(-5);
-  const resto = jugados.slice(0, -5);
+  const ultimos = jugados.slice(-10);
+  const resto = jugados.slice(0, -10);
 
   const parts = ((mp.data ?? []) as MatchPlayer[]).filter((x) => x.minutos > 0);
   const stats = ((p.data ?? []) as Player[]).map((pl) => {
@@ -151,7 +151,7 @@ export default async function PortadaPage() {
           </div>
 
           <div className="border-t mt-5 pt-4">
-            <h3 className={etiqueta}>Forma · últimos 5</h3>
+            <h3 className={etiqueta}>Forma · últimos 10</h3>
             {n === 0 ? (
               <p className="text-sm text-gray-500 mt-3">Aún no hay resultados.</p>
             ) : (

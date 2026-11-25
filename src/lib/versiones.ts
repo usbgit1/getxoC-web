@@ -8,6 +8,11 @@ export interface Version {
 
 export const versiones: Version[] = [
   {
+    version: "v0.104",
+    fecha: "2026-11-25",
+    cambios: ["Portada: la tarjeta de forma muestra los últimos 10 partidos en lugar de 5."],
+  },
+  {
     version: "v0.103",
     fecha: "2026-11-25",
     cambios: ["Jugadores: en el ordenador la columna de partidos muestra los últimos 10; en el móvil siguen siendo 5."],
