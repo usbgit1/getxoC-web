@@ -13,11 +13,12 @@ export default async function JugadoresPage() {
   if (p.error) return <p className="text-red-600">Error: {p.error.message}</p>;
 
   const parts = (mp.data ?? []) as MatchPlayer[];
-  // Últimos cinco partidos con datos de jugadores, del más antiguo al más reciente.
+  // Últimos diez partidos con datos de jugadores, del más antiguo al más reciente
+  // (en el móvil la tabla solo muestra los 5 más recientes).
   const conDatos = new Set(parts.map((x) => x.match_id));
   const ultimos = ((m.data ?? []) as { id: string; jornada: number }[])
     .filter((x) => conDatos.has(x.id))
-    .slice(0, 5)
+    .slice(0, 10)
     .reverse();
   const stats: PlayerStats[] = ((p.data ?? []) as Player[]).map((pl) => {
     const all = parts.filter((x) => x.player_id === pl.id);

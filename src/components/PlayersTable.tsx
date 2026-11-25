@@ -87,8 +87,9 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
                 {c.label}
               </th>
               {c.key === "nombre" && (
-                <th className="px-1.5 sm:px-2 py-2 font-medium" title="Últimos 5 partidos (antiguo → reciente): verde T titular, amarillo suplente, rojo sin minutos, negro no convocado">
-                  Últ. 5
+                <th className="px-1.5 sm:px-2 py-2 font-medium" title="Últimos partidos (antiguo → reciente): verde T titular, amarillo suplente, rojo sin minutos, negro no convocado">
+                  <span className="sm:hidden">Últ. 5</span>
+                  <span className="hidden sm:inline">Últ. 10</span>
                 </th>
               )}
               </Fragment>
@@ -105,13 +106,14 @@ export default function PlayersTable({ players }: { players: PlayerStats[] }) {
               </td>
               <td className="px-1.5 sm:px-2">
                 <div className="flex gap-0.5">
-                  {s.racha.map((r) => (
+                  {s.racha.map((r, i) => (
                     <span
                       key={r.jornada}
                       title={`J${r.jornada}: ${rachaInfo[r.estado].texto}`}
-                      className={`w-5 h-5 rounded-sm text-[10px] font-bold text-white flex items-center justify-center ${
-                        rachaInfo[r.estado].fondo
-                      }`}
+                      // En el móvil solo se ven los 5 más recientes; en el ordenador, hasta 10.
+                      className={`w-5 h-5 rounded-sm text-[10px] font-bold text-white items-center justify-center ${
+                        i < s.racha.length - 5 ? "hidden sm:flex" : "flex"
+                      } ${rachaInfo[r.estado].fondo}`}
                     >
                       {r.estado === "titular" ? "T" : ""}
                     </span>
